@@ -840,109 +840,142 @@
     </main>
   </div>
 
-  <script>
-    const visibleSections = {
-      avanzato: false,
-      pro: false
-    };
+ <script>
+  const visibleSections = {
+    avanzato: false,
+    pro: false
+  };
 
-    function euro(value) {
-      return new Intl.NumberFormat("it-IT", {
-        style: "currency",
-        currency: "EUR",
-        maximumFractionDigits: 0
-      }).format(value);
-    }
+  function euro(value) {
+    return new Intl.NumberFormat("it-IT", {
+      style: "currency",
+      currency: "EUR",
+      maximumFractionDigits: 0
+    }).format(value);
+  }
 
-    function getNumber(id, fallback = 0) {
-      const el = document.getElementById(id);
-      if (!el) return fallback;
-      const value = Number(el.value);
-      return Number.isFinite(value) ? value : fallback;
-    }
+  function getNumber(id, fallback = 0) {
+    const el = document.getElementById(id);
+    if (!el) return fallback;
+    const value = Number(el.value);
+    return Number.isFinite(value) ? value : fallback;
+  }
 
-    function toggleSection(id) {
-      const el = document.getElementById(id);
-      visibleSections[id] = !visibleSections[id];
-      el.classList.toggle("hidden", !visibleSections[id]);
-      calcola();
-    }
+  function toggleSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
 
-    function calcola() {
-      const mq = Math.max(getNumber("mq", 5), 1);
-      const tipo = getNumber("tipo", 1000);
-      const immobile = getNumber("immobile", 1.1);
-      const qualita = getNumber("qualita", 1.25);
-
-      const altezzaRivestimento = visibleSections.avanzato ? getNumber("altezzaRivestimento", 2) : 2;
-      const puntiAcqua = visibleSections.avanzato ? getNumber("acqua", 4) : 4;
-      const puntiElettrici = visibleSections.avanzato ? getNumber("elettrico", 4) : 4;
-      const scarichi = visibleSections.avanzato ? getNumber("scarichi", 0) : 0;
-
-      const prezzoPiastrelle = visibleSections.pro ? getNumber("piastrelle", 40) : 40;
-      const sanitari = visibleSections.pro ? getNumber("sanitari", 600) : 600;
-      const doccia = visibleSections.pro ? getNumber("doccia", 400) : 400;
-      const difficolta = visibleSections.pro ? getNumber("difficolta", 1.1) : 1.1;
-      const imprevistiPerc = visibleSections.pro ? getNumber("imprevisti", 0.15) : 0.15;
-
-      const perimetroStimato = Math.sqrt(mq) * 4;
-      const mqRivestimento = perimetroStimato * altezzaRivestimento;
-      const mqTotalePiastrelle = mq + mqRivestimento;
-
-      const demolizioni = mqTotalePiastrelle * 22;
-      const smaltimento = mq * 45;
-      const impiantoIdrico = puntiAcqua * 220;
-      const impiantoElettrico = puntiElettrici * 80;
-      const materiali = mqTotalePiastrelle * prezzoPiastrelle * qualita;
-      const posa = mqTotalePiastrelle * 40;
-      const manodopera = mq * 55;
-
-      const base =
-        demolizioni +
-        smaltimento +
-        impiantoIdrico +
-        impiantoElettrico +
-        scarichi +
-        materiali +
-        posa +
-        sanitari +
-        doccia +
-        manodopera;
-
-      const corretto = base * immobile * difficolta;
-      const imprevisti = corretto * imprevistiPerc;
-      const totale = corretto + imprevisti;
-
-      const min = Math.round((totale * 0.9) / 100) * 100;
-      const max = Math.round((totale * 1.15) / 100) * 100;
-
-      document.getElementById("result").textContent = `${euro(min)} – ${euro(max)}`;
-
-      let level = "Base";
-      if (visibleSections.avanzato) level = "Avanzato";
-      if (visibleSections.pro) level = "PRO";
-      document.getElementById("precisionLevel").textContent = level;
-
-      document.getElementById("breakdown").innerHTML = `
-        <div class="breakdown-row"><span>Demolizioni</span><span>${euro(demolizioni)}</span></div>
-        <div class="breakdown-row"><span>Smaltimento macerie</span><span>${euro(smaltimento)}</span></div>
-        <div class="breakdown-row"><span>Impianto idrico</span><span>${euro(impiantoIdrico)}</span></div>
-        <div class="breakdown-row"><span>Impianto elettrico</span><span>${euro(impiantoElettrico)}</span></div>
-        <div class="breakdown-row"><span>Materiali rivestimenti</span><span>${euro(materiali)}</span></div>
-        <div class="breakdown-row"><span>Posa rivestimenti</span><span>${euro(posa)}</span></div>
-        <div class="breakdown-row"><span>Sanitari</span><span>${euro(sanitari)}</span></div>
-        <div class="breakdown-row"><span>Doccia / vasca</span><span>${euro(doccia)}</span></div>
-        <div class="breakdown-row"><span>Manodopera generale</span><span>${euro(manodopera)}</span></div>
-        <div class="breakdown-row"><span>Imprevisti</span><span>${euro(imprevisti)}</span></div>
-      `;
-    }
-
-    document.querySelectorAll("input, select").forEach((el) => {
-      el.addEventListener("input", calcola);
-      el.addEventListener("change", calcola);
-    });
-
+    visibleSections[id] = !visibleSections[id];
+    el.classList.toggle("hidden", !visibleSections[id]);
     calcola();
+  }
+
+  function calcola() {
+    const mq = Math.max(getNumber("mq", 5), 1);
+    const tipo = getNumber("tipo", 1000);
+    const immobile = getNumber("immobile", 1.1);
+    const qualita = getNumber("qualita", 1.25);
+
+    const altezzaRivestimento = visibleSections.avanzato ? getNumber("altezzaRivestimento", 2) : 2;
+    const puntiAcqua = visibleSections.avanzato ? getNumber("acqua", 4) : 4;
+    const puntiElettrici = visibleSections.avanzato ? getNumber("elettrico", 4) : 4;
+    const scarichi = visibleSections.avanzato ? getNumber("scarichi", 0) : 0;
+
+    const prezzoPiastrelle = visibleSections.pro ? getNumber("piastrelle", 40) : 40;
+    const sanitari = visibleSections.pro ? getNumber("sanitari", 600) : 600;
+    const doccia = visibleSections.pro ? getNumber("doccia", 400) : 400;
+    const difficolta = visibleSections.pro ? getNumber("difficolta", 1.1) : 1.1;
+    const imprevistiPerc = visibleSections.pro ? getNumber("imprevisti", 0.15) : 0.15;
+
+    const perimetroStimato = Math.sqrt(mq) * 4;
+    const mqRivestimento = perimetroStimato * altezzaRivestimento;
+    const mqTotalePiastrelle = mq + mqRivestimento;
+
+    const demolizioni = mqTotalePiastrelle * 22;
+    const smaltimento = mq * 45;
+    const impiantoIdrico = puntiAcqua * 220;
+    const impiantoElettrico = puntiElettrici * 80;
+    const materiali = mqTotalePiastrelle * prezzoPiastrelle * qualita;
+    const posa = mqTotalePiastrelle * 40;
+    const manodopera = mq * 55;
+
+    const base =
+      demolizioni +
+      smaltimento +
+      impiantoIdrico +
+      impiantoElettrico +
+      scarichi +
+      materiali +
+      posa +
+      sanitari +
+      doccia +
+      manodopera;
+
+    const corretto = base * immobile * difficolta;
+    const imprevisti = corretto * imprevistiPerc;
+    const totale = corretto + imprevisti;
+
+    const min = Math.round((totale * 0.9) / 100) * 100;
+    const max = Math.round((totale * 1.15) / 100) * 100;
+
+    document.getElementById("result").textContent = `${euro(min)} – ${euro(max)}`;
+
+    let level = "Base";
+    if (visibleSections.avanzato) level = "Avanzato";
+    if (visibleSections.pro) level = "PRO";
+    document.getElementById("precisionLevel").textContent = level;
+
+    document.getElementById("breakdown").innerHTML = `
+      <div class="breakdown-row"><span>Demolizioni</span><span>${euro(demolizioni)}</span></div>
+      <div class="breakdown-row"><span>Smaltimento macerie</span><span>${euro(smaltimento)}</span></div>
+      <div class="breakdown-row"><span>Impianto idrico</span><span>${euro(impiantoIdrico)}</span></div>
+      <div class="breakdown-row"><span>Impianto elettrico</span><span>${euro(impiantoElettrico)}</span></div>
+      <div class="breakdown-row"><span>Materiali rivestimenti</span><span>${euro(materiali)}</span></div>
+      <div class="breakdown-row"><span>Posa rivestimenti</span><span>${euro(posa)}</span></div>
+      <div class="breakdown-row"><span>Sanitari</span><span>${euro(sanitari)}</span></div>
+      <div class="breakdown-row"><span>Doccia / vasca</span><span>${euro(doccia)}</span></div>
+      <div class="breakdown-row"><span>Manodopera generale</span><span>${euro(manodopera)}</span></div>
+      <div class="breakdown-row"><span>Imprevisti</span><span>${euro(imprevisti)}</span></div>
+    `;
+  }
+
+  function inviaLead() {
+    const email = document.getElementById("email").value.trim();
+
+    if (!email || !email.includes("@")) {
+      alert("Inserisci una email valida");
+      return;
+    }
+
+    const params = new URLSearchParams();
+    params.append("mq", document.getElementById("mq").value);
+    params.append("workType", document.getElementById("tipo").selectedOptions[0].text);
+    params.append("propertyType", document.getElementById("immobile").selectedOptions[0].text);
+    params.append("startTime", "");
+    params.append("fullName", "");
+    params.append("phone", "");
+    params.append("zone", "Pescara");
+    params.append("email", email);
+
+    fetch("https://script.google.com/macros/s/AKfycbzcVmusL4pfMwZ3Ov34K_OMzukhAvlCl_t_0twHzcKHROiKzKk3pwaSEQUCBb8DmlD2DA/exec", {
+      method: "POST",
+      body: params
+    })
+      .then(() => {
+        document.getElementById("successMsg").style.display = "block";
+      })
+      .catch(() => {
+        alert("Errore nell'invio. Riprova.");
+      });
+  }
+
+  document.querySelectorAll("input, select").forEach((el) => {
+    el.addEventListener("input", calcola);
+    el.addEventListener("change", calcola);
+  });
+
+  calcola();
+</script>
 function inviaLead() {
   let email = document.getElementById("email").value.trim();
 
