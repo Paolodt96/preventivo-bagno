@@ -992,9 +992,9 @@ function inviaLead() {
   params.append("zone", "Pescara");
   params.append("email", email);
 
-  fetch("https://script.google.com/macros/s/AKfycbyjIAwsZ4hBHBmdnHjE5aazNODVKetgRk6QoDVDKh0CDnkz1C321j8qTqArv7vCU-gP0Q/exec", {
-    method: "POST",
-    body: params
+  fetch("https://script.google.com/macros/s/AKfycbwPsoisp4oQtWbV4YB7JwiDoFko5jkUiPhGmXbAcwVF5fGVUVWpmyBTD6bH8xlKHj082A/exec", {
+    method: "GET",
+    mode: "no-cors"
   })
     .then(() => {
       document.getElementById("successMsg").style.display = "block";
