@@ -603,6 +603,30 @@
       .hero-actions { flex-direction: column; }
       .btn { width: 100%; }
     }
+.lead-box {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #e0f2fe;
+  text-align: center;
+}
+
+.lead-box h3 {
+  margin-bottom: 10px;
+}
+
+.lead-box input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.lead-box button {
+  margin-top: 10px;
+  background: #0284c7;
+}
   </style>
 </head>
 <body>
@@ -784,6 +808,25 @@
         <div class="breakdown" id="breakdown"></div>
 
         <div class="notice">
+              <div class="lead-box">
+  <h3>📩 Ricevi il preventivo dettagliato</h3>
+  <p>
+    Inserisci la tua email per ricevere:
+    <br>
+    ✔ Il preventivo in PDF  
+    ✔ Consigli per risparmiare sui lavori  
+    ✔ Errori da evitare prima di iniziare
+  </p>
+
+  <input type="email" id="email" placeholder="Inserisci la tua email">
+
+<button onclick="inviaLead()">Ricevi PDF gratuito</button>
+
+  <div id="successMsg" style="display:none; color:green; margin-top:10px;">
+    ✔ Email inviata! Riceverai il preventivo a breve.
+  </div>
+</div>
+
           ⚠️ La stima dipende dai dati inseriti e da valori medi. Materiali, stato reale dell’immobile, accessibilità e sopralluogo possono modificare il costo finale.
         </div>
 
@@ -900,6 +943,40 @@
     });
 
     calcola();
+function inviaLead() {
+  let email = document.getElementById("email").value.trim();
+
+  if (!email || !email.includes("@")) {
+    alert("Inserisci una email valida");
+    return;
+  }
+
+  const params = new URLSearchParams();
+  params.append("mq", document.getElementById("mq").value);
+  params.append("workType", document.getElementById("tipo").selectedOptions[0].text);
+  params.append("propertyType", document.getElementById("immobile").selectedOptions[0].text);
+  params.append("startTime", "");
+  params.append("fullName", "");
+  params.append("phone", "");
+  params.append("zone", "Pescara");
+  params.append("email", email);
+
+  fetch("https://script.google.com/macros/s/AKfycbzcVmusL4pfMwZ3Ov34K_OMzukhAvlCl_t_0twHzcKHROiKzKk3pwaSEQUCBb8DmlD2DA/exec", {
+    method: "POST",
+    body: params
+  })
+    .then(() => {
+      document.getElementById("successMsg").style.display = "block";
+    })
+    .catch(() => {
+      alert("Errore nell'invio. Riprova.");
+    });
+}
+
+  document.getElementById("successMsg").style.display = "block";
+
+  console.log("LEAD:", email);
+}
   </script>
 </body>
 </html>
