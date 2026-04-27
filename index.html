@@ -957,10 +957,9 @@
     params.append("zone", "Pescara");
     params.append("email", email);
 
-    fetch("https://script.google.com/macros/s/AKfycbzcVmusL4pfMwZ3Ov34K_OMzukhAvlCl_t_0twHzcKHROiKzKk3pwaSEQUCBb8DmlD2DA/exec", {
-  method: "POST",
-  mode: "no-cors",
-  body: params
+    fetch("https://script.google.com/macros/s/AKfycbwPsoisp4oQtWbV4YB7JwiDoFko5jkUiPhGmXbAcwVF5fGVUVWpmyBTD6bH8xlKHj082A/exec?" + params.toString(), {
+  method: "GET",
+  mode: "no-cors"
 });
 
 document.getElementById("successMsg").style.display = "block";
