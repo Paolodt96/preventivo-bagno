@@ -820,7 +820,8 @@
 
   <input type="email" id="email" placeholder="Inserisci la tua email">
 
-<button onclick="inviaLead()">Ricevi PDF gratuito</button>
+<button onclick="inviaLead(); generaPDF();"> Ricevi PDF gratuito
+</button>
 
   <div id="successMsg" style="display:none; color:green; margin-top:10px;">
     ✔ Email inviata! Riceverai il preventivo a breve.
@@ -972,7 +973,33 @@ document.getElementById("successMsg").style.display = "block";
   });
 
   calcola();
+function generaPDF() {
+  const contenuto = document.querySelector("#result").innerText;
+
+  const win = window.open("", "_blank");
+
+  win.document.write(`
+    <html>
+      <head>
+        <title>Preventivo Bagno</title>
+        <style>
+          body { font-family: Arial; padding: 30px; }
+          h1 { color: #0284c7; }
+        </style>
+      </head>
+      <body>
+        <h1>Preventivo ristrutturazione bagno</h1>
+        <p>${contenuto}</p>
+        <p>Questa è una stima indicativa basata sui dati inseriti.</p>
+      </body>
+    </html>
+  `);
+
+  win.document.close();
+  win.print();
+}
 </script>
+
 function inviaLead() {
   let email = document.getElementById("email").value.trim();
 
